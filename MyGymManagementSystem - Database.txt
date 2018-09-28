@@ -1,0 +1,211 @@
+drop database MyGymManagementSystem;
+create database MyGymManagementSystem;
+use MyGymManagementSystem;
+
+Create Table Login(
+	User_Name varchar(200),
+	Password varchar(200)
+);
+
+Create Table User(
+	User_Name varchar(100),
+	Current_Password varchar(100),
+	New_Password varchar(100),
+	ReEnter_Password varchar(100)
+);
+
+
+Create Table Inventory(
+	Inventory_ID varchar(20),
+	Inventory_Name varchar(200),
+	Brand_Name varchar(200),
+	Qty int,
+	Constraint Primary Key (Inventory_ID)
+);
+
+
+
+Create Table Member(
+	Member_ID varchar(20),
+	Member_Name varchar(100),
+	NIC varchar(13),
+	Occupation varchar(100),
+	Address varchar(300),
+	DOB varchar(500),
+	Age int,
+	Gender varchar(6),
+	Height decimal(5,2),
+	Weight decimal(5,2),
+	Email varchar(50),
+	PhoneNo varchar(11),
+	Emergency_Contact varchar(11),
+	Constraint Primary Key (Member_ID)	
+);
+
+
+
+Create Table Instructor(
+	Instructor_ID varchar(20),
+	Instructor_Name varchar(200),
+	Instructor_TeleNo varchar(11),
+	Instructor_NIC varchar(13),
+	Instructor_Address varchar(300),
+	Gender varchar(6),
+	Constraint Primary Key (Instructor_ID)
+);
+
+
+Create Table Exercise(
+	Exercise_ID varchar(20),
+	Exercise_Name varchar(100),
+	Constraint Primary Key (Exercise_ID)
+);
+
+
+
+Create Table PaymentCharge(
+	Payment_Charge_ID varchar(20),
+	Payment_Type varchar(20),
+	charge varchar(100),
+	Constraint Primary Key (Payment_Charge_ID)
+);
+
+
+
+Create Table MemberHealth(
+	Member_Health_ID varchar(20),
+	Member_ID varchar(20),
+	Blood_Group varchar(5),
+	Heart_Attack_Stroke boolean,
+	High_Blood_Pressure boolean,
+	Epilepsy_or_Fits boolean,
+	High_Cholesterol boolean,
+	Stomach_or_Duodenal_Ulcer boolean,
+	Liver_or_Kidney_condition boolean,
+	Pain_or_Tightness_in_the_chest boolean,
+	Diabetes boolean,
+	Hernia boolean,
+	Difficulty_in_breathing_or_Chronic_coughs boolean,
+	Asthma boolean,
+	Fainting_Attacks boolean,
+	Advice_from_physician_to_Exercise boolean,
+	Constraint Primary Key (Member_Health_ID),
+	Constraint Foreign Key(Member_ID) References Member(Member_ID)
+	On Update Cascade on Delete Cascade
+);
+
+
+Create Table Registration(
+	Member_RegNo varchar(20),
+	Registration_Date varchar(500),
+	Member_ID varchar(20),
+	Constraint Primary Key (Member_RegNo),
+	Constraint Foreign Key(Member_ID) References Member(Member_ID)
+	On Update Cascade on Delete Cascade
+);
+
+
+
+Create Table Attendance(
+	Attendance_ID varchar(20),
+	Member_RegNo varchar(20),
+	Date  varchar(500),
+	In_Time varchar(20),
+	Out_Time varchar(20),
+	Constraint Primary Key (Attendance_ID),
+	Constraint Foreign Key(Member_RegNo) References Registration(Member_RegNo)
+	On Update Cascade on Delete Cascade
+);
+
+
+Create Table Payment(
+	Payment_ID varchar(20),
+	Member_RegNo varchar(20),
+	Member_NIC varchar(15),
+	Member_Name varchar(100),
+	Payment_Date varchar(500),
+	Payment_Charge_ID varchar(20),
+	Payment_Type varchar(60),
+	Charge varchar(100),
+	Cash varchar(100),
+	Balance varchar(100),
+	Constraint Primary Key (Payment_ID),
+	Constraint Foreign Key(Member_RegNo) References Registration(Member_RegNo)
+	On Update Cascade on Delete Cascade,
+	Constraint Foreign Key(Payment_Charge_ID) References PaymentCharge(Payment_Charge_ID)
+	On Update Cascade on Delete Cascade
+);
+
+
+Create Table Schedule(
+	Schedule_ID varchar(20),
+	Member_RegNo varchar(20),
+	Instructor_ID varchar(20),
+	Start_Date varchar(500),
+	End_Date varchar(500),
+	Constraint Primary Key (Schedule_ID),
+	Constraint Foreign Key(Member_RegNo) References Registration(Member_RegNo)
+	On Update Cascade on Delete Cascade,
+	Constraint Foreign Key(Instructor_ID) References Instructor(Instructor_ID)
+	On Update Cascade on Delete Cascade
+);
+
+
+
+Create Table ScheduleDetail(
+	Schedule_Detail_ID varchar(20),
+	Schedule_ID varchar(20),
+	Exercise_ID varchar(20),
+	Sets varchar(200),
+	Repetetion varchar(200),
+	Constraint Primary Key (Schedule_Detail_ID),
+	Constraint Foreign Key(Schedule_ID) References Schedule(Schedule_ID)
+	On Update Cascade on Delete Cascade,
+	Constraint Foreign Key(Exercise_ID) References Exercise(Exercise_ID)
+	On Update Cascade on Delete Cascade
+);
+
+Create Table viewAllAttendence(
+	regisid varchar(20),
+	memberid varchar(20),
+	membername varchar(20),
+	attenDate varchar(200)
+);
+
+
+Create Table Measurement(
+	Measurement_ID varchar(20),
+	Schedule_ID varchar(20),
+	Member_ID varchar(20),
+	Date varchar(500),
+	Weight decimal(5,2),
+	Height decimal(5,2),
+	Neck decimal(5,2),
+	Shoulders decimal(5,2),
+	Chest decimal(5,2),
+	Waist decimal(5,2),
+	Hips decimal(5,2),
+	Upper_Arm_Left decimal(5,2),
+	upper_Arm_Right decimal(5,2),
+	Forearm_Left decimal(5,2),
+	Forearm_Right decimal(5,2),
+	Thigh_Left decimal(5,2),
+	Thigh_Right decimal(5,2),
+	Calf_Left decimal(5,2),
+	Calf_Right decimal(5,2),
+	Constraint Primary Key (Measurement_ID),
+	Constraint Foreign Key(Schedule_ID) References Schedule(Schedule_ID)
+	On Update Cascade on Delete Cascade,
+	Constraint Foreign Key(Member_ID) References Member(Member_ID)
+	On Update Cascade on Delete Cascade
+);
+
+
+
+
+Insert Into PaymentCharge Values('Pc001','Free Weight','1300.00');
+Insert Into PaymentCharge Values('Pc002','Free Weight & Cardio','1800.00');
+
+----------------------------------------------------------------------------------
+
+
